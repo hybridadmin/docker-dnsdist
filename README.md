@@ -1,5 +1,7 @@
 # PowerDNS Dnsdist Docker Image
 
+![github ci](https://github.com/hybridadmin/docker-dnsdist/workflows/ci/badge.svg?branch=main)
+
 ## Supported tags and respective `Dockerfile` links
 
 - [`1.5.0`, `latest` (*1.5.0/Dockerfile*)](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.5.0/Dockerfile)
