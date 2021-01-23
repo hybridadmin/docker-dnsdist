@@ -5,7 +5,7 @@
 - [`1.5.0`, `latest` (*1.5.0/Dockerfile*)](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.5.0/Dockerfile)
 - [`1.4.0`, (*1.4.0/Dockerfile*)](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.4.0/Dockerfile)
 
-## What is Unbound?
+## What is Dnsdist?
 
 dnsdist is a highly DNS-, DoS- and abuse-aware loadbalancer.
 > [dnsdist.org](https://dnsdist.org/)
