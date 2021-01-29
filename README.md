@@ -4,8 +4,8 @@
 
 ## Supported tags and respective `Dockerfile` links
 
-- [`1.5.0`, `latest` (*1.5.0/Dockerfile*)](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.5.0/Dockerfile)
-- [`1.4.0`, (*1.4.0/Dockerfile*)](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.4.0/Dockerfile)
+- [`1.5.0`, `latest`](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.5.0/Dockerfile)
+- [`1.4.0`](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.4.0/Dockerfile)
 
 ## What is Dnsdist?
 
