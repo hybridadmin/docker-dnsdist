@@ -14,7 +14,8 @@ dnsdist is a highly DNS-, DoS- and abuse-aware loadbalancer.
 > [`dnsdist.org`](https://dnsdist.org/)
 
 ## Usage
-er-compose
+
+### docker-compose
 ```yaml
 ---
 version: "3.2"
