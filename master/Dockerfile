@@ -2,7 +2,7 @@ FROM ubuntu:bionic as powerdns
 LABEL maintainer="Tinashe Chikomo"
 
 ENV NAME=dnsdist \
-    DNSDIST_VERSION=1.5.1 \
+    DNSDIST_VERSION=master \
     VERSION=1.2 \
     SUMMARY="${NAME} is a highly DNS-, DoS- and abuse-aware loadbalancer." \
     DESCRIPTION="${NAME} is a highly DNS-, DoS- and abuse-aware loadbalancer."
@@ -18,10 +18,10 @@ LABEL summary="${SUMMARY}" \
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y curl gnupg sudo apt-utils
 
-ADD 1.5.0/pdns.list /etc/apt/sources.list.d/pdns.list
-ADD 1.5.0/dnsdist /etc/apt/preferences.d/dnsdist
+ADD master/pdns.list /etc/apt/sources.list.d/pdns.list
+ADD master/dnsdist /etc/apt/preferences.d/dnsdist
 
-RUN curl https://repo.powerdns.com/FD380FBB-pub.asc | sudo apt-key add - && \
+RUN curl https://repo.powerdns.com/CBC8B383-pub.asc | sudo apt-key add - && \
     set -x && \
      DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
       dnsdist \

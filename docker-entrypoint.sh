@@ -2,8 +2,9 @@
 set -e
 
 DNSDIST_CONF="/etc/dnsdist/dnsdist.conf"
+DNSDIST_VERSION=$(dpkg -l | grep dnsdist | awk '{print $3}' | cut -c1-5)
 
-if [ "$1" = "/usr/bin/dnsdist" ] && [ ! -f ${DNSDIST_CONF} ]; then
+if [ "$1" = "/usr/bin/dnsdist" ]; then
 
 cat >> ${DNSDIST_CONF} <<EOL
 -- Variables
@@ -33,8 +34,9 @@ setServerPolicy(firstAvailable)
 AllowedSubnets={"127.0.0.1/32", "0.0.0.0/0"}
 setACL(AllowedSubnets)
 
+-- Caching
 if (string.match(enable_caching, "true")) then
-        pcache = newPacketCache(1000000, 28800, 0, 60, 60, true)
+        pcache = newPacketCache(1000000, {maxTTL=86400, minTTL=0, temporaryFailureTTL=60, staleTTL=60, dontAge=false})
         getPool(""):setCache(pcache)
         setStaleCacheEntriesTTL(28800)
 end
@@ -42,11 +44,10 @@ end
 -- Dynamic Blocks
 local dbr = dynBlockRulesGroup()
 dbr:setQueryRate(200, 10, "Exceeded Max Query per Second rate", 60, 100)
-dbr:setRCodeRate(dnsdist.NXDOMAIN, 100, 10, "Exceeded Non-Existent Domain Query Type response rate", 60)
-dbr:setRCodeRate(dnsdist.SERVFAIL, 100, 10, "Exceeded ServFail Query Type response rate", 60)
-dbr:setRCodeRate(dnsdist.REFUSED, 100, 10, "Exceeded Refused Query Type  response rate", 60)
-dbr:setRCodeRate(dnsdist.ANY, 100, 10, "Exceeded ANY Query Type response rate", 60)
-dbr:setResponseByteRate(65536, 10, "Exceeded Response Bandwidth rate", 60)
+dbr:setRCodeRate(DNSRCode.NXDOMAIN, 100, 10, "Exceeded NXD rate", 60)
+dbr:setRCodeRate(DNSRCode.SERVFAIL, 100, 10, "Exceeded ServFail rate", 60)
+dbr:setQTypeRate(DNSQType.ANY, 50, 10, "Exceeded ANY rate", 60)
+dbr:setResponseByteRate(10000, 10, "Exceeded resp BW rate", 60)
 dbr:excludeRange({"192.0.2.0/24", "2001:db8::/32"})
 
 function maintenance()
