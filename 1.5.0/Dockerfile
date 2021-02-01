@@ -16,8 +16,6 @@ LABEL summary="${SUMMARY}" \
       name="hybridadmin/${NAME}" \
       maintainer="Tinashe Chikomo"
 
-WORKDIR /tmp/src
-
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y curl gnupg sudo apt-utils
 
 ADD 1.5.1/pdns.list /etc/apt/sources.list.d/pdns.list
@@ -33,13 +31,16 @@ RUN curl https://repo.powerdns.com/FD380FBB-pub.asc | sudo apt-key add - && \
         /var/tmp/* \
         /var/lib/apt/lists/*
 
-ADD dnsdist.conf /etc/dnsdist/dnsdist.conf
+ADD docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
+
+RUN chmod a+x /usr/bin/docker-entrypoint.sh
 
 EXPOSE 53/tcp
 EXPOSE 53/udp
 
-VOLUME "/etc/dnsdist/"
+#VOLUME "/etc/dnsdist/"
+WORKDIR "/etc/dnsdist/"
 
 HEALTHCHECK --interval=5s --timeout=3s --start-period=5s CMD drill @127.0.0.1 cloudflare.com || exit 1
-
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["/usr/bin/dnsdist", "-u","_dnsdist", "-g", "_dnsdist" ,"--supervised"]
