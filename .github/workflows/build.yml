@@ -1,70 +1,58 @@
-name: ci
+name: Build
 
 on:
   push:
-    branches: main
+  pull_request:
+  schedule:
+    - cron: '0 18 * * sun'
 
 jobs:
-  path-context:
-    runs-on: ubuntu-latest
+  build:
+    name: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        distribution:
+          - image: dnsdist
+            version: "1.4.0"
+            tags: "1.4.0"
+            platform: "linux/amd64"
+          - image: dnsdist
+            version: "1.5.0"
+            platform: "linux/amd64"
+            tags: "1.5.0,latest"
+          - image: dnsdist
+            version: "master"
+            platform: "linux/amd64"
+            tags: "master"
+
     steps:
-      -
-        name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v2
-      -
-        name: Set up QEMU
+
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-      -
-        name: Set up Docker Buildx
+
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      -
-        name: Login to DockerHub
+
+      - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push 1.4.0
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./1.4.0/Dockerfile
-          platforms: linux/amd64
-          push: true
-          tags: |
-            hybridadmin/dnsdist:1.4.0
-      -
-        name: Build and push 1.5.0
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./1.5.0/Dockerfile
-          platforms: linux/amd64
-          push: true
-          tags: |
-            hybridadmin/dnsdist:1.5.0
-      -
-        name: Build and push master
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./master/Dockerfile
-          platforms: linux/amd64
-          push: true
-          tags: |
-            hybridadmin/dnsdist:master
-      -
-        name: Build and push latest
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./1.5.0/Dockerfile
-          platforms: linux/amd64
-          push: true
-          tags: |
-            hybridadmin/dnsdist:latest
-      -
-        name: Update Repo Readme/Description
+
+      - name: Build/Push Docker to DockerHub
+        run: |
+          docker buildx build \
+            --push \
+            --platform ${{ matrix.distribution.platform }} \
+            --file=${{ matrix.distribution.version }}/Dockerfile \
+            $(for i in $(echo ${{ matrix.distribution.tags }} | sed "s/,/ /g"); do echo "--tag hybridadmin/${{ matrix.distribution.image }}:$i "; done) \
+            .
+
+      - name: Update Repo Readme/Description
         uses: peter-evans/dockerhub-description@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
