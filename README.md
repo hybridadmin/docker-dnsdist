@@ -33,7 +33,7 @@ services:
       - SET_MAXTCPQUERIESPERCONNECTION=100
       - SET_ECSOVERRIDE=true
       - SET_ECSSOURCEPREFIXV4=32
-      - SET_ECSSOURCEPREFIXV6=64
+      - SET_ECSSOURCEPREFIXV6=128
       - SET_SERVFAILWHENNOSERVER=true
       - SET_VERBOSEHEALTHCHECKS=true
     ports:
@@ -61,7 +61,7 @@ docker run -d \
 -e SET_MAXTCPQUERIESPERCONNECTION=100 #optional \
 -e SET_ECSOVERRIDE=true #optional \
 -e SET_ECSSOURCEPREFIXV4=32 #optional \
--e SET_ECSSOURCEPREFIXV6=64 #optional \
+-e SET_ECSSOURCEPREFIXV6=128 #optional \
 -e SET_SERVFAILWHENNOSERVER=true #optional \
 -e SET_VERBOSEHEALTHCHECKS=true #optional \
 -p 53:53/udp -p 53:53/tcp --restart=always hybridadmin/dnsdist:latest
@@ -92,8 +92,8 @@ setLocal("0.0.0.0:53", {doTCP = true, reusePort = true})
 addLocal("0.0.0.0:53", {doTCP = true, reusePort = true})
 
 -- Backend servers
-newServer({address="1.1.1.1", name="cloudflare", qps=1000, order=1, weight=1})
-newServer({address="9.9.9.9", name="quad9", qps=1000, order=1, weight=1})
+newServer({address="1.1.1.1", name="cloudflare", qps=2000, order=1, weight=1, checkName="c.root-servers.net.", checkType="A", maxCheckFailures=1, retries=5})
+newServer({address="9.9.9.9", name="quad9", qps=2000, order=2, weight=2, checkName="d.root-servers.net.", checkType="A", maxCheckFailures=1, retries=5})
 setServerPolicy(firstAvailable)
 
 -- Access Lists
@@ -122,8 +122,8 @@ end
 ```
 
 Additional settings can be added based on the supported settings in the links below:
-* https://dnsdist.org/reference/config.html
-* https://dnsdist.org/advanced/index.html
+* [`Configuration Reference`](https://dnsdist.org/reference/config.html)
+* [`Advanced Topics`](https://dnsdist.org/advanced/index.html)
 
 ## Environment Variables
 

@@ -2,7 +2,7 @@ FROM ubuntu:bionic as powerdns
 LABEL maintainer="Tinashe Chikomo"
 
 ENV NAME=dnsdist \
-    DNSDIST_VERSION=1.5.1 \
+    DNSDIST_VERSION=1.5.0 \
     VERSION=1.2 \
     SUMMARY="${NAME} is a highly DNS-, DoS- and abuse-aware loadbalancer." \
     DESCRIPTION="${NAME} is a highly DNS-, DoS- and abuse-aware loadbalancer."
