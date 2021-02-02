@@ -10,24 +10,24 @@ cat >> ${DNSDIST_CONF} <<EOL
 -- Variables
 local enable_caching = "true"
 
-setMaxUDPOutstanding(65535)
-setMaxTCPClientThreads(100)
-setMaxTCPConnectionDuration(10)
-setMaxTCPConnectionsPerClient(100)
-setMaxTCPQueriesPerConnection(100)
---setECSOverride(true)
-setECSSourcePrefixV4(32)
-setECSSourcePrefixV6(128)
-setServFailWhenNoServer(true)
---setVerboseHealthChecks(true)
+setMaxUDPOutstanding(${SET_MAXUDPOUTSTANDING:-65535})
+setMaxTCPClientThreads(${SET_MAXTCPCLIENTTHREADS:-100})
+setMaxTCPConnectionDuration(${SET_MAXTCPCONNECTIONDURATION:-10})
+setMaxTCPConnectionsPerClient(${SET_MAXTCPCONNECTIONSPERCLIENT:-100})
+setMaxTCPQueriesPerConnection(${SET_MAXTCPQUERIESPERCONNECTION:-100})
+--setECSOverride(${SET_ECSOVERRIDE:-true})
+setECSSourcePrefixV4(${SET_ECSSOURCEPREFIXV4:-32})
+setECSSourcePrefixV6(${SET_ECSSOURCEPREFIXV6:-128})
+setServFailWhenNoServer(${SET_SERVFAILWHENNOSERVER:-true})
+--setVerboseHealthChecks(${SET_VERBOSEHEALTHCHECKS:-true})
 
 -- Local Addresses binding
-setLocal("0.0.0.0:53", {doTCP = true, reusePort = true})
-addLocal("0.0.0.0:53", {doTCP = true, reusePort = true})
+setLocal("${LISTEN_ADDR:-0.0.0.0}:53", {doTCP = true, reusePort = true})
+addLocal("${LISTEN_ADDR:-0.0.0.0}:53", {doTCP = true, reusePort = true})
 
 -- Backend servers
-newServer({address="1.1.1.1", name="cloudflare", qps=1000, order=1, weight=1})
-newServer({address="9.9.9.9", name="quad9", qps=1000, order=1, weight=1})
+newServer({address="1.1.1.1", name="cloudflare", qps=2000, order=1, weight=1, checkName="c.root-servers.net.", checkType="A", maxCheckFailures=1, retries=5})
+newServer({address="9.9.9.9", name="quad9", qps=2000, order=2, weight=2, checkName="d.root-servers.net.", checkType="A", maxCheckFailures=1, retries=5})
 setServerPolicy(firstAvailable)
 
 -- Access Lists

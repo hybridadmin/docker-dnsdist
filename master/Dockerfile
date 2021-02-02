@@ -18,8 +18,8 @@ LABEL summary="${SUMMARY}" \
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y curl gnupg sudo apt-utils
 
-ADD master/pdns.list /etc/apt/sources.list.d/pdns.list
-ADD master/dnsdist /etc/apt/preferences.d/dnsdist
+ADD ${DNSDIST_VERSION}/pdns.list /etc/apt/sources.list.d/pdns.list
+ADD ${DNSDIST_VERSION}/dnsdist /etc/apt/preferences.d/dnsdist
 
 RUN curl https://repo.powerdns.com/CBC8B383-pub.asc | sudo apt-key add - && \
     set -x && \
