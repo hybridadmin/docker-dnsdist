@@ -1,0 +1,7 @@
+.molecule
+*.log
+*.swp
+.tox
+.cache
+*.yml~
+*~

@@ -1,1 +1,1 @@
-deb [arch=amd64] http://repo.powerdns.com/ubuntu bionic-dnsdist-15 main
+deb [arch=amd64] http://repo.powerdns.com/debian buster-dnsdist-15 main
