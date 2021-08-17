@@ -21,7 +21,7 @@ dnsdist is a highly DNS-, DoS- and abuse-aware loadbalancer.
 
 ```yaml
 ---
-version: "3.2"
+version: "3"
 services:
   dnsdist:
     image: hybridadmin/dnsdist:1.5.0
