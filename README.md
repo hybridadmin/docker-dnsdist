@@ -5,17 +5,20 @@
 ## Supported tags and respective `Dockerfile` links
 
 - [`master`](https://github.com/hybridadmin/docker-dnsdist/tree/main/master/Dockerfile)
+- [`1.6.0`](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.6.0/Dockerfile)
 - [`1.5.0`, `latest`](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.5.0/Dockerfile)
 - [`1.4.0`](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.4.0/Dockerfile)
 
 ## What is Dnsdist?
 
 dnsdist is a highly DNS-, DoS- and abuse-aware loadbalancer.
+
 > [`dnsdist.org`](https://dnsdist.org/)
 
 ## Usage
 
 ### docker-compose
+
 ```yaml
 ---
 version: "3.2"
@@ -42,7 +45,7 @@ services:
     restart: always
 ```
 
-###  docker cli
+### docker cli
 
 Run a container with default settings:
 
@@ -51,6 +54,7 @@ docker run -d -p 53:53/udp -p 53:53/tcp --restart=always hybridadmin/dnsdist:lat
 ```
 
 Run a container with customized settings:
+
 ```console
 docker run -d \
 -e LISTEN_ADDR=0.0.0.0 \
@@ -72,6 +76,7 @@ docker run -d \
 By default, the very basic configuration settings below have been added in `/etc/dnsdist/dnsdist.conf` inside the container.
 
 Example `dnsdist.conf`:
+
 ```
 -- Variables
 local enable_caching = "true"
@@ -122,21 +127,22 @@ end
 ```
 
 Additional settings can be added based on the supported settings in the links below:
-* [`Configuration Reference`](https://dnsdist.org/reference/config.html)
-* [`Advanced Topics`](https://dnsdist.org/advanced/index.html)
+
+- [`Configuration Reference`](https://dnsdist.org/reference/config.html)
+- [`Advanced Topics`](https://dnsdist.org/advanced/index.html)
 
 ## Environment Variables
 
-| Variable | Function |
-| :----: | --- |
-| `LISTEN_ADDR` | The address(es) to bind to |
-| `SET_MAXUDPOUTSTANDING` | The maximum number of outstanding UDP queries to a given backend server |
-| `SET_MAXTCPCLIENTTHREADS` | The maximum of TCP client threads, handling TCP connections |
-| `SET_MAXTCPCONNECTIONDURATION` | The maximum duration of an incoming TCP connection, in seconds |
-| `SET_MAXTCPCONNECTIONSPERCLIENT` | The maximum number of TCP connections per client |
-| `SET_MAXTCPQUERIESPERCONNECTION` | The maximum number of queries in an incoming TCP connection |
-| `SET_ECSOVERRIDE` | Override an existing option already present in the query when `useClientSubnet` is set and dnsdist adds an EDNS Client Subnet Client option to the query |
-| `SET_ECSSOURCEPREFIXV4` | The subnet prefix to be used to truncate the requestors IPv4 address when `useClientSubnet` is set |
-| `SET_ECSSOURCEPREFIXV6` | The subnet prefix to be used to truncate the requestors IPv6 address when `useClientSubnet` is set |
-| `SET_SERVFAILWHENNOSERVER` | Control whether to return a ServFail when no servers are available, or drop the query |
-| `SET_VERBOSEHEALTHCHECKS` | Set whether health check errors should be logged |
+|             Variable             | Function                                                                                                                                                 |
+| :------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|          `LISTEN_ADDR`           | The address(es) to bind to                                                                                                                               |
+|     `SET_MAXUDPOUTSTANDING`      | The maximum number of outstanding UDP queries to a given backend server                                                                                  |
+|    `SET_MAXTCPCLIENTTHREADS`     | The maximum of TCP client threads, handling TCP connections                                                                                              |
+|  `SET_MAXTCPCONNECTIONDURATION`  | The maximum duration of an incoming TCP connection, in seconds                                                                                           |
+| `SET_MAXTCPCONNECTIONSPERCLIENT` | The maximum number of TCP connections per client                                                                                                         |
+| `SET_MAXTCPQUERIESPERCONNECTION` | The maximum number of queries in an incoming TCP connection                                                                                              |
+|        `SET_ECSOVERRIDE`         | Override an existing option already present in the query when `useClientSubnet` is set and dnsdist adds an EDNS Client Subnet Client option to the query |
+|     `SET_ECSSOURCEPREFIXV4`      | The subnet prefix to be used to truncate the requestors IPv4 address when `useClientSubnet` is set                                                       |
+|     `SET_ECSSOURCEPREFIXV6`      | The subnet prefix to be used to truncate the requestors IPv6 address when `useClientSubnet` is set                                                       |
+|    `SET_SERVFAILWHENNOSERVER`    | Control whether to return a ServFail when no servers are available, or drop the query                                                                    |
+|    `SET_VERBOSEHEALTHCHECKS`     | Set whether health check errors should be logged                                                                                                         |
