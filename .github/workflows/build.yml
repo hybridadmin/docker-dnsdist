@@ -1,71 +1,33 @@
-name: Build
+name: build_push
 
-on:
-  push:
-  pull_request:
+on: [push]
 
 jobs:
-  build:
-    name: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}
-    runs-on: ubuntu-20.04
+  run_docker_build:
     strategy:
       fail-fast: false
+      max-parallel: 4
       matrix:
-        distribution:
+        distro:
           - image: dnsdist
-            version: "1.4.0"
-            tags: "1.4.0"
-            platform: "linux/amd64"
+            version: "1.9"
+            tags: "1.9"
           - image: dnsdist
-            version: "1.5.0"
-            platform: "linux/amd64"
-            tags: "1.5.0,latest"
-          - image: dnsdist
-            version: "master"
-            platform: "linux/amd64"
-            tags: "master"
-          - image: dnsdist
-            version: "1.6.0"
-            tags: "1.6.0"
-            platform: "linux/amd64"
+            version: "2.0"
+            tags: "2.0,latest"
+    uses: hybridadmin/reuse-workflows/.github/workflows/build_push_apps.yml@main
+    secrets: inherit
+    with:
+      distro_image: '${{ matrix.distro.image }}'
+      distro_tags: '${{ matrix.distro.tags }}'
+      distro_platform: 'linux/amd64,linux/arm64'
+      distro_version: '${{ matrix.distro.version }}'
+      skip_tests: 'true'
 
-    steps:
-      -
-        name: Checkout repository
-        uses: actions/checkout@v2
-      -
-        name: Docker Layer Caching
-        uses: satackey/action-docker-layer-caching@v0.0.11
-        with:
-          key: ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}-docker-cache-{hash}
-          restore-keys: |
-            ${{ matrix.distribution.image }}-${{ matrix.distribution.version }}-docker-cache-
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      -
-        name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build/Push Docker to DockerHub
-        run: |
-          docker buildx build \
-            --push \
-            --platform ${{ matrix.distribution.platform }} \
-            --file=${{ matrix.distribution.version }}/Dockerfile \
-            $(for i in $(echo ${{ matrix.distribution.tags }} | sed "s/,/ /g"); do echo "--tag hybridadmin/${{ matrix.distribution.image }}:$i "; done) \
-            .
-      -
-        name: Update Repo Readme/Description
-        uses: peter-evans/dockerhub-description@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: hybridadmin/dnsdist
-          readme-filepath: ./README.md
+  run_update_readme:
+    needs:
+      - run_docker_build
+    uses: hybridadmin/reuse-workflows/.github/workflows/update_readme.yml@main
+    secrets: inherit
+    with:
+      repo_name: 'hybridadmin/dnsdist'

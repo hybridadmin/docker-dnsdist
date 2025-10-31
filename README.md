@@ -1,13 +1,11 @@
 # PowerDNS Dnsdist Docker Image
 
-![github ci](https://github.com/hybridadmin/docker-dnsdist/workflows/ci/badge.svg?branch=main) ![Docker Pulls](https://img.shields.io/docker/pulls/hybridadmin/dnsdist)
+[![Build](https://github.com/hybridadmin/docker-dnsdist/actions/workflows/build.yml/badge.svg)](https://github.com/hybridadmin/docker-dnsdist/actions/workflows/build.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/hybridadmin/dnsdist)
 
 ## Supported tags and respective `Dockerfile` links
 
-- [`master`](https://github.com/hybridadmin/docker-dnsdist/tree/main/master/Dockerfile)
-- [`1.6.0`](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.6.0/Dockerfile)
-- [`1.5.0`, `latest`](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.5.0/Dockerfile)
-- [`1.4.0`](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.4.0/Dockerfile)
+- [`2.0`, `latest`](https://github.com/hybridadmin/docker-dnsdist/tree/main/2.0/Dockerfile)
+- [`1.9`](https://github.com/hybridadmin/docker-dnsdist/tree/main/1.9/Dockerfile)
 
 ## What is Dnsdist?
 
